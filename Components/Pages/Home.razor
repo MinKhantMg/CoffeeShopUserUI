@@ -1,0 +1,191 @@
+﻿@page "/"
+@using CoffeeShopUser.DTO.CategoryDTO
+@using CoffeeShopUser.DTO.ProductDTO
+@using CoffeeShopUser.DTO.ProductVariantDTO
+@using CoffeeShopUser.DTO.SubCategoryDTO
+
+@inject CoffeeShopUser.Services.CategoryS.ICategoryService CategoryService
+
+<div class="container mt-4">
+
+    @if (status)
+    {
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#" @onclick="BackToCategories">Menu</a>
+                </li>
+                @for (int i = 1; i < breadcrumbs.Count; i++)
+                {
+                    var crumb = breadcrumbs[i];
+                    var isLast = (i == breadcrumbs.Count - 1);
+
+                    <li class="breadcrumb-item @(isLast ? "active" : "")" aria-current="page">
+                        @if (!isLast)
+                        {
+                            <span>@crumb</span>
+                        }
+                        else
+                        {
+                            <strong><span>@crumb</span></strong>
+                        }
+                    </li>
+                }
+            </ol>
+        </nav>
+    }
+
+    @if (categories != null)
+    {
+        <h1 class="my-4">Menu</h1>
+        <div class="row">
+            @foreach (var category in categories)
+            {
+                <div class="col-md-3">
+                    <button class="btn btn-primary" style="width : 250px; height : 150px" @onclick="() => LoadSubcategories(category.Id, category.Name)">
+                        <h4><strong>@category.Name</strong></h4>
+                    </button>
+                </div>
+            }
+        </div>
+    }
+
+    @if (subcategories != null)
+    {
+        <div class="row mt-4">
+            @foreach (var subcategory in subcategories)
+            {
+                <div class="col-md-3">
+                    <button class="btn btn-primary" style="width : 250px; height : 150px" @onclick="() => LoadProducts(subcategory.Id, subcategory.Name)">
+                        <h4><strong>@subcategory.Name</strong></h4>
+                    </button>
+                </div>
+            }
+        </div>
+    }
+
+    @if (products != null)
+    {
+        <div class="row mt-4">
+            @foreach (var product in products)
+            {
+                <div class="col-md-3">
+                    <button class="btn btn-primary" style="width : 250px; height : 150px" @onclick="() => LoadProductVariants(product.Id, product.Name)">
+                        <h4><strong>@product.Name</strong></h4>
+                    </button>
+                </div>
+            }
+        </div>
+    }
+
+    @if (productVariants != null)
+    {
+        <div class="row mt-4">
+            @foreach (var productvariant in productVariants)
+            {
+                <div class="col-md-3">
+                    <button class="btn btn-primary" style="width : 250px; height : 150px">
+                        <h4><strong>@productvariant.Name</strong></h4>
+                    </button>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<CategoryDto>? categories;
+    private List<SubCategoryDto>? subcategories;
+    private List<ProductDto>? products;
+    private List<ProductVariantDto> productVariants;
+    private List<string> breadcrumbs = new() { "Menu" };
+
+    private string currentCategoryId = string.Empty;
+    private string currentSubCategoryId = string.Empty;
+    private string currentProductId = string.Empty;
+
+    private bool status = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await CategoryService.GetAllCategory();
+    }
+
+    private async Task LoadSubcategories(string categoryId, string categoryName)
+    {
+        status = true;
+        currentCategoryId = categoryId;
+        breadcrumbs = new() { "Menu", categoryName };
+
+        subcategories = await CategoryService.GetSubcategoriesByCategoryIdAsync(categoryId);
+        categories = null;
+        products = null;
+
+        StateHasChanged();
+    }
+
+    public async Task LoadProducts(string subcategoryId, string subcategoryName)
+    {
+        currentSubCategoryId = subcategoryId;
+        products = await CategoryService.GetProductsBySubCategoryIdAsync(subcategoryId);
+
+        if (!breadcrumbs.Contains(subcategoryName))
+        {
+            breadcrumbs.Add(subcategoryName);
+        }
+
+        categories = null;
+        subcategories = null;
+        StateHasChanged();
+    }
+
+    public async Task LoadProductVariants(string productId, string productName)
+    {
+        currentProductId = productId;
+        productVariants = await CategoryService.GetProductVariantsByProductIdAsync(productId);
+
+        if (!breadcrumbs.Contains(productName))
+        {
+            breadcrumbs.Add(productName);
+        }
+
+        categories = null;
+        subcategories = null;
+        products = null;
+        StateHasChanged();
+    }
+
+    private async Task OnBreadcrumbClick(int index)
+    {
+        if (index == 0)
+        {
+            await BackToCategories();
+        }
+        else if (index == 1)
+        {
+            await LoadSubcategories(currentCategoryId, breadcrumbs[1]);
+        }
+        else if (index == 2)
+        {
+            await LoadProducts(currentSubCategoryId, breadcrumbs[2]);
+        }
+        else if (index == 3)
+        {
+            await LoadProductVariants(currentProductId, breadcrumbs[3]);
+        }
+
+        breadcrumbs = breadcrumbs.Take(index + 1).ToList();
+    }
+
+
+    private async Task BackToCategories()
+    {
+        breadcrumbs = new() { "Menu" };
+        categories = await CategoryService.GetAllCategory();
+        subcategories = null;
+        products = null;
+        productVariants = null;
+        status = false;
+        StateHasChanged();
+    }
+}
