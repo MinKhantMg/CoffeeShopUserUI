@@ -31,3 +31,7 @@ C:\Users\PC\Desktop\Cafe\CoffeeShopUserUI\CoffeeShopUser\obj\Debug\net8.0\refint
 C:\Users\PC\Desktop\Cafe\CoffeeShopUserUI\CoffeeShopUser\obj\Debug\net8.0\CoffeeShopUser.pdb
 C:\Users\PC\Desktop\Cafe\CoffeeShopUserUI\CoffeeShopUser\obj\Debug\net8.0\CoffeeShopUser.genruntimeconfig.cache
 C:\Users\PC\Desktop\Cafe\CoffeeShopUserUI\CoffeeShopUser\obj\Debug\net8.0\ref\CoffeeShopUser.dll
+C:\Users\PC\Desktop\Cafe\CoffeeShopUserUI\CoffeeShopUser\obj\Debug\net8.0\CoffeeShopUser.sourcelink.json
+C:\Users\PC\Desktop\Cafe\CoffeeShopUserUI\CoffeeShopUser\bin\Debug\net8.0\Blazored.LocalStorage.dll
+C:\Users\PC\Desktop\Cafe\CoffeeShopUserUI\CoffeeShopUser\obj\Debug\net8.0\CoffeeShopUser.csproj.AssemblyReference.cache
+C:\Users\PC\Desktop\Cafe\CoffeeShopUserUI\CoffeeShopUser\obj\Debug\net8.0\CoffeeSh.8626E90D.Up2Date

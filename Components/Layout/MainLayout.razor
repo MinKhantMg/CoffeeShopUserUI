@@ -1,16 +1,19 @@
 ﻿@inherits LayoutComponentBase
-@inject CoffeeShopUser.Services.CategoryS.ICategoryService CategoryService
+@inject NavigationManager NavigationManager
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    
+
+    @if (!IsCartPage)
+    {
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+    }
 
     <main>
-        <div class="top-row px-4">
-            @* <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a> *@
-            <button class="btn btn-warning" @onclick="RefreshData">🔄 Refresh Data</button>
-        </div>
+        @* <div class="top-row px-4"> *@
+        @* </div> *@
 
         <article class="content px-4">
             @Body
@@ -25,8 +28,6 @@
 </div>
 
 @code {
-    private async Task RefreshData()
-    {
-        await CategoryService.RefreshAllCacheAsync();
-    }
+    private bool IsCartPage =>
+        NavigationManager.Uri.Contains("/cart", StringComparison.OrdinalIgnoreCase);
 }

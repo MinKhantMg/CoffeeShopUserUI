@@ -63,6 +63,17 @@ public class CategoryService : ICategoryService
         return cachedProductVariants;
     }
 
+    public async Task<ProductVariantDto> GetProductVariantsByIdAsync(string productId)
+    {
+        if (!_memoryCache.TryGetValue($"productVariants_{productId}", out ProductVariantDto cachedProductVariants))
+        {
+            var response = await _apiClient.GetFromJsonAsync<ProductVariantDto>($"/productvariant/{productId}");
+            cachedProductVariants = response ?? new ProductVariantDto();
+            _memoryCache.Set($"productVariants_{productId}", cachedProductVariants);
+        }
+        return cachedProductVariants;
+    }
+
     public async Task RefreshAllCacheAsync()
     {
         _memoryCache.Remove("categories");

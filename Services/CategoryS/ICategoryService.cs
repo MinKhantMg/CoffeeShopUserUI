@@ -15,6 +15,8 @@ namespace CoffeeShopUser.Services.CategoryS
 
         Task<List<ProductVariantDto>> GetProductVariantsByProductIdAsync(string productId);
 
+        Task<ProductVariantDto> GetProductVariantsByIdAsync(string productId);
+
         Task RefreshAllCacheAsync();
     }
 }

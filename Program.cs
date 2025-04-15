@@ -1,5 +1,8 @@
+using Blazored.LocalStorage;
 using CoffeeShopUser.Components;
 using CoffeeShopUser.Services;
+using CoffeeShopUser.Services.CartItemS;
+using CoffeeShopUser.Services.CartS;
 using CoffeeShopUser.Services.CategoryS;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,16 +12,18 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddMemoryCache();
+builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICartItemService, CartItemService>();
 
 builder.Services.AddHttpClient<ApiClient>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7035/"); // Correct protocol
+    client.BaseAddress = new Uri("https://localhost:7035/");
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
