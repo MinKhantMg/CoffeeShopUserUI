@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "lHe0fzW5UEovnKGA1QHcRYAzVpvMAO7zQ5KnkAhJnO0=",
+  "Hash": "ATA+yI68gqzjdIeluuAQmRIdD6qF45eCvi30wo8ydJ8=",
   "Source": "CoffeeShopUser",
   "BasePath": "_content/CoffeeShopUser",
   "Mode": "Default",
@@ -141,6 +141,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.png"
+    },
+    {
+      "Identity": "C:\\Users\\PC\\Desktop\\Cafe\\CoffeeShopUserUI\\CoffeeShopUser\\wwwroot\\js\\site.js",
+      "SourceId": "CoffeeShopUser",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\PC\\Desktop\\Cafe\\CoffeeShopUserUI\\CoffeeShopUser\\wwwroot\\",
+      "BasePath": "_content/CoffeeShopUser",
+      "RelativePath": "js/site#[.{fingerprint}]?.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "imsoirtvmy",
+      "Integrity": "Fis1i/Y+yWb57BrVOpfVb+DToFt9APfrea6JCkAmJOY=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\site.js"
     }
   ],
   "Endpoints": [
@@ -633,6 +654,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-4mWsDy3aHl36ZbGt8zByK7Pvd4kRUoNgTYzRnwmPHwg="
+        }
+      ]
+    },
+    {
+      "Route": "js/site.imsoirtvmy.js",
+      "AssetFile": "C:\\Users\\PC\\Desktop\\Cafe\\CoffeeShopUserUI\\CoffeeShopUser\\wwwroot\\js\\site.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "303"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Fis1i/Y+yWb57BrVOpfVb+DToFt9APfrea6JCkAmJOY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 17 Apr 2025 09:07:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "imsoirtvmy"
+        },
+        {
+          "Name": "label",
+          "Value": "js/site.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Fis1i/Y+yWb57BrVOpfVb+DToFt9APfrea6JCkAmJOY="
+        }
+      ]
+    },
+    {
+      "Route": "js/site.js",
+      "AssetFile": "C:\\Users\\PC\\Desktop\\Cafe\\CoffeeShopUserUI\\CoffeeShopUser\\wwwroot\\js\\site.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "303"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Fis1i/Y+yWb57BrVOpfVb+DToFt9APfrea6JCkAmJOY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 17 Apr 2025 09:07:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-Fis1i/Y+yWb57BrVOpfVb+DToFt9APfrea6JCkAmJOY="
         }
       ]
     }

@@ -8,136 +8,132 @@
 @inject NavigationManager NavigationManager
 
 <div class="container mt-5">
-    <div class="row">
+	<div class="row">
 
-        <!-- Left: Cart Items -->
-        <div class="col-md-8">
-            <h2>Your Cart</h2>
+		<!-- Left: Cart Items -->
+		<div class="col-md-8">
+			<h2>Your Cart</h2>
 
-            @if (cartItems == null || !cartItems.Any())
-            {
-                <p class="ms-1 mt-3">Your cart is empty.</p>
+			@if (cartItems == null || !cartItems.Any())
+			{
+				<p class="ms-1 mt-3">Your cart is empty.</p>
 
-                <button class="btn btn-success btn-lg mt-2"
-                        style="border : 1px solid black; border-radius: 50px" @onclick="AddMoreProductVariant">
-                    + Add More Items
-                </button>
-            }
-            else
-            {
-                @foreach (var item in cartItems)
-                {
-                    <div class="card mb-3">
-                        <div class="row g-0 align-items-center">
-                            <div class="col-md-4 text-center">
-                                <img src="https://localhost:7035/uploads/@item.ImageUrl"
-                                     class="img-fluid rounded-start" style="max-width: 150px;" />
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">@item.ProductVariantName</h5>
-                                    <p class="card-text">MMK @item.Price</p>
-                                    <div class="d-flex align-items-center">
-                                        <!-- Minus / Trash Button -->
-                                        <button class="btn btn-outline-secondary me-2"
-                                                style="width: 40px; text-align: center;"
-                                                @onclick="() => UpdateQuantity(item.Id, item.Quantity - 1)">
-                                            @if (item.Quantity == 1)
-                                            {
-                                                <i class="bi bi-trash"></i>
-                                            }
-                                            else
-                                            {
-                                                <i class="bi bi-dash"></i> <!-- Optional: Bootstrap dash icon -->
-                                            }
-                                        </button>
+				<button class="btn btn-success btn-lg mt-2"
+						style="border : 1px solid black; border-radius: 50px" @onclick="AddMoreProductVariant">
+					+ Add More Items
+				</button>
+			}
+			else
+			{
+				@foreach (var item in cartItems)
+				{
+					<div class="card mb-3">
+						<div class="row g-0 align-items-center">
+							<div class="col-md-4 text-center">
+								<img src="https://localhost:7035/uploads/@item.ImageUrl"
+									 class="img-fluid rounded-start" style="max-width: 150px;" />
+							</div>
+							<div class="col-md-8">
+								<div class="card-body">
+									<h5 class="card-title">@item.ProductVariantName</h5>
+									<p class="card-text">MMK @item.SubTotal</p>
+									<div class="d-flex align-items-center">
+										<!-- Minus / Trash Button -->
+										<button class="btn btn-outline-secondary me-2"
+												style="width: 40px; text-align: center;"
+												@onclick="() => UpdateQuantity(item.Id, item.Quantity - 1)">
+											@if (item.Quantity == 1)
+											{
+												<i class="bi bi-trash"></i>
+											}
+											else
+											{
+												<i class="bi bi-dash"></i>
+											}
+										</button>
 
-                                        <span class="mx-2">@item.Quantity</span>
+										<span class="mx-2">@item.Quantity</span>
 
-                                        <!-- Plus Button -->
-                                        <button class="btn btn-outline-secondary ms-2"
-                                                style="width: 40px; text-align: center;"
-                                                @onclick="() => UpdateQuantity(item.Id, item.Quantity + 1)">
-                                            <i class="bi bi-plus"></i>
-                                        </button>
-                                    </div>
+										<!-- Plus Button -->
+										<button class="btn btn-outline-secondary ms-2"
+												style="width: 40px; text-align: center;"
+												@onclick="() => UpdateQuantity(item.Id, item.Quantity + 1)">
+											<i class="bi bi-plus"></i>
+										</button>
+									</div>
 
-                                </div>
-                            </div>
-                          
-                        </div>
-                    </div>
-                }
-                <button class="btn btn-success btn-lg mt-2"
-                        style="border : 1px solid black; border-radius: 50px" @onclick="AddMoreProductVariant">
-                    + Add More Items
-                </button>
-            }
-        </div>
+								</div>
+							</div>
 
-        <!-- Right: Summary -->
-        <div class="col-md-4">
-            <div class="card p-3" style="margin-top: 45px">
-                <h4>Summary</h4>
-                <p>Total Items: @cartItems?.Count</p>
-                <p>Total Price: MMK @cartItems?.Sum(i => i.Price * i.Quantity)</p>
-                <button class="btn btn-success btn-lg w-100" @onclick="Checkout">Checkout</button>
-            </div>
-        </div>
+						</div>
+					</div>
+				}
+				<button class="btn btn-success btn-lg mt-2"
+						style="border : 1px solid black; border-radius: 50px" @onclick="AddMoreProductVariant">
+					+ Add More Items
+				</button>
+			}
+		</div>
 
-    </div>
+		<!-- Right: Summary -->
+		<div class="col-md-4">
+			<div class="card p-3" style="margin-top: 45px">
+				<h4>Summary</h4>
+				<p>Total Items: @cartItems?.Count</p>
+				<p>Total Price: MMK @cartItems?.Sum(i => i.Price * i.Quantity)</p>
+				<button class="btn btn-success btn-lg w-100" @onclick="Checkout">Checkout</button>
+			</div>
+		</div>
+
+	</div>
 </div>
 
 @code {
-    private List<CartItemDisplayDto> cartItems = new();
+	private List<CartItemDisplayDto> cartItems = new();
 
-    protected override async Task OnInitializedAsync()
-    {
-        var cartId = await LocalStorage.GetItemAsync<string>("cartId");
-        Console.WriteLine($"[DEBUG] Loaded cartId from LocalStorage: {cartId}");
-        if (!string.IsNullOrEmpty(cartId))
-        {
-            var summary = await CartItemService.GetCartItemsByCartIdAsync(cartId);
-            cartItems = summary.CartItems;
-        }
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var cartId = await LocalStorage.GetItemAsync<string>("cartId");
+		Console.WriteLine($"[DEBUG] Loaded cartId from LocalStorage: {cartId}");
+		if (!string.IsNullOrEmpty(cartId))
+		{
+			var summary = await CartItemService.GetCartItemsByCartIdAsync(cartId);
+			cartItems = summary.CartItems;
+		}
+	}
 
-    private async Task UpdateQuantity(string cartItemId, int newQty)
-{
-    if (newQty <= 0)
-    {
-        await CartItemService.DeleteCartItemAsync(cartItemId);
+	private async Task UpdateQuantity(string cartItemId, int newQty)
+	{
+		if (newQty <= 0)
+		{
+			var itemToRemove = cartItems.FirstOrDefault(i => i.Id == cartItemId);
+			if (itemToRemove != null)
+			{
+				cartItems.Remove(itemToRemove);
+			}
 
-        // Remove from UI
-        var itemToRemove = cartItems.FirstOrDefault(i => i.Id == cartItemId);
-        if (itemToRemove != null)
-        {
-            cartItems.Remove(itemToRemove);
-        }
+			await CartItemService.DeleteCartItemAsync(cartItemId);
 
-        StateHasChanged(); // force UI refresh
-    }
-    else
-    {
-        await CartItemService.UpdateCartItemQuantityAsync(cartItemId, newQty);
+			StateHasChanged();
+		}
+		else
+		{
+			await CartItemService.UpdateCartItemQuantityAsync(cartItemId, newQty);
 
-        // Only refresh from backend on update
-        var cartId = await LocalStorage.GetItemAsync<string>("cartId");
-        var summary = await CartItemService.GetCartItemsByCartIdAsync(cartId);
-        cartItems = summary.CartItems;
-    }
-}
+			// Only refresh from backend on update
+			var cartId = await LocalStorage.GetItemAsync<string>("cartId");
+			var summary = await CartItemService.GetCartItemsByCartIdAsync(cartId);
+			cartItems = summary.CartItems;
+		}
+	}
 
+	private async Task AddMoreProductVariant()
+	{
+		NavigationManager.NavigateTo("/");
+	}
 
-
-    private async Task AddMoreProductVariant()
-    {
-        NavigationManager.NavigateTo("/");
-    }
-
-    private async Task Checkout()
-    {
-        // Redirect to summary or payment
-        // NavigationManager.NavigateTo("/checkout");
-    }
+	private async Task Checkout()
+	{
+		NavigationManager.NavigateTo("/order");
+	}
 }

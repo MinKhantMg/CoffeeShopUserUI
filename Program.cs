@@ -4,6 +4,7 @@ using CoffeeShopUser.Services;
 using CoffeeShopUser.Services.CartItemS;
 using CoffeeShopUser.Services.CartS;
 using CoffeeShopUser.Services.CategoryS;
+using CoffeeShopUser.Services.OrderS;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<ICartItemService, CartItemService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddHttpClient<ApiClient>(client =>
 {

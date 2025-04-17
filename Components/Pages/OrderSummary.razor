@@ -1,0 +1,174 @@
+﻿@page "/order"
+
+@using Blazored.LocalStorage
+@using CoffeeShopUser.DTO.OrderDTO
+@using CoffeeShopUser.Enums
+@inject ILocalStorageService LocalStorage
+@inject CoffeeShopUser.Services.OrderS.IOrderService OrderService
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="container mt-5">
+    <div class="row">
+
+        <div class="mb-3">
+            <button class="btn btn-primary" @onclick="BackToCart">
+                <i class="fas fa-arrow-left"></i> Back to Cart
+            </button>
+        </div>
+
+        <div class="col-md-6">
+            <h2>Order Details</h2>
+
+            <div class="mb-3">
+                <label for="orderType" class="form-label">Select Order Type</label>
+                <select class="form-select" id="orderType" @onchange="OnOrderTypeChanged">
+                    <option disabled selected value="">-- Select Order Type --</option>
+                    @foreach (OrderType type in Enum.GetValues(typeof(OrderType)))
+                    {
+                        <option value="@type" selected="@(type == _orderType)">
+                            @type
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="paymentType" class="form-label">Select Payment Type</label>
+                <select class="form-select" id="paymentType" @onchange="OnPaymentTypeChanged">
+                    <option disabled selected value="">-- Select Payment Type --</option>
+                    @foreach (PaymentType type in Enum.GetValues(typeof(PaymentType)))
+                    {
+                        <option value="@type" selected="@(type == _paymentType)">
+                            @type
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <button class="btn btn-success w-100" @onclick="PlaceOrder">Place Order</button>
+        </div>
+
+        <!-- Right: Order Summary -->
+        <div class="col-md-6">
+            <h2>Order Summary</h2>
+
+            @if (orderSummary != null)
+            {
+                <div class="card p-3">
+                    <h4 class="text-center">Café de Luxe Receipt</h4>
+                    <p>Order Type: <strong>@orderSummary.OrderType</strong></p>
+                    <p>Payment Type: <strong>@orderSummary.PaymentType</strong></p>
+                    <p>Date: @(orderSummary.CreatedOn?.ToString("dd/MM/yyyy") ?? DateTime.Now.ToString("dd/MM/yyyy"))</p>
+                    
+                    <hr />
+
+                    @foreach (var item in orderSummary.Items)
+                    {
+                        <div class="d-flex justify-content-between">
+                            <div>@item.ProductVariantName x @item.Quantity</div>
+                            <div>MMK @item.SubTotal</div>
+                        </div>
+                    }
+
+                    <hr />
+                    <div class="d-flex justify-content-between fw-bold">
+                        <div>Total</div>
+                        <div>MMK @orderSummary.TotalAmount</div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">Select order and payment type to see summary.</p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+
+    private OrderSummaryDto? orderSummary;
+    private OrderType _orderType;
+    private PaymentType _paymentType;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await UpdatePreview();
+    }
+
+    private async Task UpdatePreview()
+    {
+        if (_orderType == null || _paymentType == null)
+        {
+            orderSummary = null;
+            return;
+        }
+
+        var cartId = await LocalStorage.GetItemAsync<string>("cartId");
+        if (string.IsNullOrEmpty(cartId)) return;
+
+        var dto = new CreateOrderDto
+            {
+                CartId = cartId,
+                OrderType = _orderType.ToString(),
+                PaymentType = _paymentType.ToString()
+            };
+
+        orderSummary = await OrderService.PreviewOrderSummary(dto);
+    }
+
+    private async Task PlaceOrder()
+    {
+        if (_orderType == null || _paymentType == null)
+            return;
+
+        var cartId = await LocalStorage.GetItemAsync<string>("cartId");
+
+        if (!string.IsNullOrEmpty(cartId))
+        {
+            var dto = new CreateOrderDto
+                {
+                    CartId = cartId,
+                    OrderType = _orderType.ToString(),
+                    PaymentType = _paymentType.ToString()
+                };
+
+            var createdOrder = await OrderService.PlaceOrder(dto);
+
+            var pdfBytes = await OrderService.DownloadReceipt(createdOrder.Id);
+            await JS.InvokeVoidAsync("downloadFileFromBytes", "receipt.pdf", Convert.ToBase64String(pdfBytes));
+            await LocalStorage.RemoveItemAsync("cartId");
+            Nav.NavigateTo("/");
+        }
+        else
+        {
+            Nav.NavigateTo("/cart");
+        }
+    }
+
+    private void BackToCart()
+    {
+        // Navigate back to the cart page
+        Nav.NavigateTo("/cart");
+    }
+
+    private async Task OnOrderTypeChanged(ChangeEventArgs e)
+    {
+        if (Enum.TryParse(typeof(OrderType), e.Value?.ToString(), out var result))
+        {
+            _orderType = (OrderType)result;
+            await UpdatePreview();
+        }
+    }
+
+    private async Task OnPaymentTypeChanged(ChangeEventArgs e)
+    {
+        if (Enum.TryParse(typeof(PaymentType), e.Value?.ToString(), out var result))
+        {
+            _paymentType = (PaymentType)result;
+            await UpdatePreview();
+        }
+    }
+
+}

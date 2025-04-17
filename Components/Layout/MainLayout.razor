@@ -2,19 +2,18 @@
 @inject NavigationManager NavigationManager
 
 <div class="page">
-    
 
-    @if (!IsCartPage)
+
+    @if (!IsCartPage && !IsOrderPage)
     {
         <div class="sidebar">
             <NavMenu />
         </div>
     }
 
-    <main>
-        @* <div class="top-row px-4"> *@
-        @* </div> *@
 
+    <main>
+   
         <article class="content px-4">
             @Body
         </article>
@@ -30,4 +29,7 @@
 @code {
     private bool IsCartPage =>
         NavigationManager.Uri.Contains("/cart", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsOrderPage =>
+       NavigationManager.Uri.Contains("/order", StringComparison.OrdinalIgnoreCase);
 }

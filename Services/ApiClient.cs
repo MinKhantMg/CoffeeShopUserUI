@@ -43,6 +43,27 @@ namespace CoffeeShopUser.Services
             return await GetFromJsonAsync<T>($"{path}/{id}");
         }
 
+        public async Task<byte[]> GetByteArrayAsync(string path)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync(path);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"[ERROR] GET {path} failed with status {response.StatusCode}");
+                    return Array.Empty<byte>();
+                }
+
+                return await response.Content.ReadAsByteArrayAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] GET {path} failed: {ex.Message}");
+                return Array.Empty<byte>();
+            }
+        }
+
         public async Task<T1> PutAsync<T1, T2>(string path, T2 putModel)
         {
             var response = await _httpClient.PutAsJsonAsync(path, putModel);
@@ -70,8 +91,4 @@ namespace CoffeeShopUser.Services
 
     }
 
-    public class ApiResponse
-    {
-        public bool Result { get; set; }
-    }
 }

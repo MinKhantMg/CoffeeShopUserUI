@@ -13,7 +13,6 @@ namespace CoffeeShopUser.Services.CartItemS
 
         public async Task AddCartItemAsync(CartItemDto cartItemDto)
         {
-            // Since we're not expecting a return, use object as T1
             await _apiClient.PostAsync<object, CartItemDto>("/cartitem", cartItemDto);
         }
 

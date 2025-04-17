@@ -8,6 +8,7 @@
         public int Quantity { get; set; }
         public int Price { get; set; }
         public int SubTotal { get; set; }
+        public int TotalPrice { get; set;}
         public string ProductVariantName { get; set; }
         public string ImageUrl { get; set; }
     }
