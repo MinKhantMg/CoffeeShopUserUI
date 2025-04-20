@@ -3,8 +3,10 @@
 @using Blazored.LocalStorage
 @using CoffeeShopUser.DTO.OrderDTO
 @using CoffeeShopUser.Enums
+
 @inject ILocalStorageService LocalStorage
 @inject CoffeeShopUser.Services.OrderS.IOrderService OrderService
+@inject CoffeeShopUser.Services.CartStateService CartStateService
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 
@@ -137,8 +139,9 @@
             var createdOrder = await OrderService.PlaceOrder(dto);
 
             var pdfBytes = await OrderService.DownloadReceipt(createdOrder.Id);
-            await JS.InvokeVoidAsync("downloadFileFromBytes", "receipt.pdf", Convert.ToBase64String(pdfBytes));
+            await JS.InvokeVoidAsync("downloadFileFromBytes", "Café de Luxe Receipt.pdf", Convert.ToBase64String(pdfBytes));
             await LocalStorage.RemoveItemAsync("cartId");
+            CartStateService.ClearCart();
             Nav.NavigateTo("/");
         }
         else
@@ -149,7 +152,6 @@
 
     private void BackToCart()
     {
-        // Navigate back to the cart page
         Nav.NavigateTo("/cart");
     }
 

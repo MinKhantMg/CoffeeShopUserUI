@@ -6,6 +6,7 @@
 @using CoffeeShopUser.DTO.SubCategoryDTO
 
 @inject CoffeeShopUser.Services.CartS.ICartService CartService
+@inject CoffeeShopUser.Services.CartStateService CartStateService
 @inject CoffeeShopUser.Services.CartItemS.ICartItemService CartItemService
 @inject CoffeeShopUser.Services.CategoryS.ICategoryService CategoryService
 @inject NavigationManager NavigationManager
@@ -201,10 +202,8 @@
 		if (selectedVariant == null)
 			return;
 
-		// Step 1: Get or create cart
 		var cartId = await CartService.GetOrCreateCartIdAsync();
 
-		// Step 2: Prepare the CartItemDto
 		var cartItem = new CartItemDto
 			{
 				CartId = cartId.ToUpper(),
@@ -213,9 +212,10 @@
 				Price = selectedVariant.Price
 			};
 
-		// Step 3: Add to cart
 		await CartItemService.AddCartItemAsync(cartItem);
-		
+
+		var cartItems = await CartItemService.GetCartItemsByCartIdAsync(cartId);
+		CartStateService.SetCartItemCount(1);
 		NavigationManager.NavigateTo("/cart");
 	}
 

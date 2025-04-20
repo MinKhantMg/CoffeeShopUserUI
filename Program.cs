@@ -16,6 +16,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<CartStateService>();
 builder.Services.AddScoped<ICartItemService, CartItemService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 

@@ -1,4 +1,6 @@
 ﻿@inject CoffeeShopUser.Services.CategoryS.ICategoryService CategoryService
+@inject CoffeeShopUser.Services.CartStateService CartStateService
+@implements IDisposable
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -15,6 +17,17 @@
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
         </div>
+        @if (CartStateService.HasItemsInCart)
+        {
+            <div class="nav-item px-3 position-relative">
+                <NavLink class="nav-link position-relative d-inline-block" href="cart">
+                    <span class="bi bi-cart-fill me-1" aria-hidden="true"></span>
+                    Cart
+                    <span class="badge bg-danger float-end mt-3">@CartStateService.CartItemCount</span>
+                </NavLink>
+            </div>
+        }
+
     </nav>
 
     <div class="d-flex justify-content-end p-3">
@@ -23,8 +36,19 @@
 </div>
 
 @code {
+
     private async Task RefreshData()
     {
         await CategoryService.RefreshAllCacheAsync();
+    }
+
+    protected override void OnInitialized()
+    {
+        CartStateService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CartStateService.OnChange -= StateHasChanged;
     }
 }

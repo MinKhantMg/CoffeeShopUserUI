@@ -4,13 +4,19 @@
 
 @inject CoffeeShopUser.Services.CartS.ICartService CartService
 @inject CoffeeShopUser.Services.CartItemS.ICartItemService CartItemService
+@inject CoffeeShopUser.Services.CartStateService CartStateService
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager NavigationManager
 
 <div class="container mt-5">
 	<div class="row">
 
-		<!-- Left: Cart Items -->
+		<div class="mb-3">
+			<button class="btn btn-primary" @onclick="BackToMenu">
+				<i class="fas fa-arrow-left"></i> Back to Menu
+			</button>
+		</div>
+
 		<div class="col-md-8">
 			<h2>Your Cart</h2>
 
@@ -19,7 +25,7 @@
 				<p class="ms-1 mt-3">Your cart is empty.</p>
 
 				<button class="btn btn-success btn-lg mt-2"
-						style="border : 1px solid black; border-radius: 50px" @onclick="AddMoreProductVariant">
+				style="border : 1px solid black; border-radius: 50px" @onclick="AddMoreProductVariant">
 					+ Add More Items
 				</button>
 			}
@@ -27,20 +33,32 @@
 			{
 				@foreach (var item in cartItems)
 				{
-					<div class="card mb-3">
+			
+					<div class="card mb-3 position-relative">
+						<button class="position-absolute top-0 end-0 m-2 text-white bg-danger border-0"
+								style="width: 32px; height: 32px; font-size: 16px;"
+								title="Remove item"
+								@onclick="() => RemoveCartItem(item.Id)">
+							✖
+						</button>
+
+
 						<div class="row g-0 align-items-center">
 							<div class="col-md-4 text-center">
 								<img src="https://localhost:7035/uploads/@item.ImageUrl"
 									 class="img-fluid rounded-start" style="max-width: 150px;" />
 							</div>
+
 							<div class="col-md-8">
 								<div class="card-body">
 									<h5 class="card-title">@item.ProductVariantName</h5>
 									<p class="card-text">MMK @item.SubTotal</p>
+
+									<!-- Quantity Controls -->
 									<div class="d-flex align-items-center">
-										<!-- Minus / Trash Button -->
+										<!-- Minus / Trash -->
 										<button class="btn btn-outline-secondary me-2"
-												style="width: 40px; text-align: center;"
+												style="width: 40px;"
 												@onclick="() => UpdateQuantity(item.Id, item.Quantity - 1)">
 											@if (item.Quantity == 1)
 											{
@@ -54,28 +72,25 @@
 
 										<span class="mx-2">@item.Quantity</span>
 
-										<!-- Plus Button -->
+										<!-- Plus -->
 										<button class="btn btn-outline-secondary ms-2"
-												style="width: 40px; text-align: center;"
+												style="width: 40px;"
 												@onclick="() => UpdateQuantity(item.Id, item.Quantity + 1)">
 											<i class="bi bi-plus"></i>
 										</button>
 									</div>
-
 								</div>
 							</div>
-
 						</div>
 					</div>
 				}
 				<button class="btn btn-success btn-lg mt-2"
-						style="border : 1px solid black; border-radius: 50px" @onclick="AddMoreProductVariant">
+				style="border : 1px solid black; border-radius: 50px" @onclick="AddMoreProductVariant">
 					+ Add More Items
 				</button>
 			}
 		</div>
 
-		<!-- Right: Summary -->
 		<div class="col-md-4">
 			<div class="card p-3" style="margin-top: 45px">
 				<h4>Summary</h4>
@@ -94,11 +109,12 @@
 	protected override async Task OnInitializedAsync()
 	{
 		var cartId = await LocalStorage.GetItemAsync<string>("cartId");
-		Console.WriteLine($"[DEBUG] Loaded cartId from LocalStorage: {cartId}");
+
 		if (!string.IsNullOrEmpty(cartId))
 		{
 			var summary = await CartItemService.GetCartItemsByCartIdAsync(cartId);
 			cartItems = summary.CartItems;
+			CartStateService.SetCartItemCount(cartItems.Count);
 		}
 	}
 
@@ -113,6 +129,7 @@
 			}
 
 			await CartItemService.DeleteCartItemAsync(cartItemId);
+			CartStateService.SetCartItemCount(cartItems.Count);
 
 			StateHasChanged();
 		}
@@ -120,14 +137,27 @@
 		{
 			await CartItemService.UpdateCartItemQuantityAsync(cartItemId, newQty);
 
-			// Only refresh from backend on update
 			var cartId = await LocalStorage.GetItemAsync<string>("cartId");
 			var summary = await CartItemService.GetCartItemsByCartIdAsync(cartId);
 			cartItems = summary.CartItems;
 		}
 	}
 
+	private async Task RemoveCartItem(string cartItemId)
+	{
+		cartItems.RemoveAll(i => i.Id == cartItemId);
+		await CartItemService.DeleteCartItemAsync(cartItemId);
+		CartStateService.SetCartItemCount(cartItems.Count);
+		StateHasChanged();
+	}
+
+
 	private async Task AddMoreProductVariant()
+	{
+		NavigationManager.NavigateTo("/");
+	}
+
+	private void BackToMenu()
 	{
 		NavigationManager.NavigateTo("/");
 	}
