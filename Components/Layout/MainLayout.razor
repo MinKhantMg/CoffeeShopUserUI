@@ -3,14 +3,9 @@
 
 <div class="page">
 
-
-    @if (!IsCartPage && !IsOrderPage)
-    {
-        <div class="sidebar">
+      <div class="sidebar">
             <NavMenu />
         </div>
-    }
-
 
     <main>
    
@@ -26,10 +21,3 @@
     <a class="dismiss">🗙</a>
 </div>
 
-@code {
-    private bool IsCartPage =>
-        NavigationManager.Uri.Contains("/cart", StringComparison.OrdinalIgnoreCase);
-
-    private bool IsOrderPage =>
-       NavigationManager.Uri.Contains("/order", StringComparison.OrdinalIgnoreCase);
-}

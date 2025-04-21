@@ -25,7 +25,7 @@
 				<p class="ms-1 mt-3">Your cart is empty.</p>
 
 				<button class="btn btn-success btn-lg mt-2"
-				style="border : 1px solid black; border-radius: 50px" @onclick="AddMoreProductVariant">
+						style="border : 1px solid black; border-radius: 50px" @onclick="AddMoreProductVariant">
 					+ Add More Items
 				</button>
 			}
@@ -33,7 +33,7 @@
 			{
 				@foreach (var item in cartItems)
 				{
-			
+
 					<div class="card mb-3 position-relative">
 						<button class="position-absolute top-0 end-0 m-2 text-white bg-danger border-0"
 								style="width: 32px; height: 32px; font-size: 16px;"
@@ -42,7 +42,7 @@
 							✖
 						</button>
 
-
+						 
 						<div class="row g-0 align-items-center">
 							<div class="col-md-4 text-center">
 								<img src="https://localhost:7035/uploads/@item.ImageUrl"
@@ -60,14 +60,7 @@
 										<button class="btn btn-outline-secondary me-2"
 												style="width: 40px;"
 												@onclick="() => UpdateQuantity(item.Id, item.Quantity - 1)">
-											@if (item.Quantity == 1)
-											{
-												<i class="bi bi-trash"></i>
-											}
-											else
-											{
-												<i class="bi bi-dash"></i>
-											}
+											<i class="bi bi-dash"></i>
 										</button>
 
 										<span class="mx-2">@item.Quantity</span>
@@ -85,7 +78,7 @@
 					</div>
 				}
 				<button class="btn btn-success btn-lg mt-2"
-				style="border : 1px solid black; border-radius: 50px" @onclick="AddMoreProductVariant">
+						style="border : 1px solid black; border-radius: 50px" @onclick="AddMoreProductVariant">
 					+ Add More Items
 				</button>
 			}
