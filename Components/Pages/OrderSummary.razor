@@ -13,14 +13,14 @@
 <div class="container mt-5">
     <div class="row">
 
-        <div class="mb-3">
+        <div class="col-md-3 mb-3">
             <button class="btn btn-primary" @onclick="BackToCart">
                 <i class="fas fa-arrow-left"></i> Back to Cart
             </button>
         </div>
-
+        <h1 class="col-md-4 text-center mb-5">Order Summary</h1>
         <div class="col-md-6">
-            <h2>Order Details</h2>
+         
 
             <div class="mb-3">
                 <label for="orderType" class="form-label">Select Order Type</label>
@@ -33,6 +33,12 @@
                         </option>
                     }
                 </select>
+
+                @*  @if (orderSummary!.OrderType == "None")  *@
+                @* {    *@
+                @*    	<div class="text-danger">Please select Order Type.</div>    *@
+                @*  }    *@
+                 
             </div>
 
             <div class="mb-3">
@@ -46,6 +52,11 @@
                         </option>
                     }
                 </select>
+                 @* @if (orderSummary!.PaymentType == "None")  *@
+                 @* {  *@
+                 @*     <div class="text-danger">Please select Payment Type.</div>  *@
+                 @* }  *@
+                
             </div>
 
             <button class="btn btn-success w-100" @onclick="PlaceOrder">Place Order</button>
@@ -53,11 +64,11 @@
 
         <!-- Right: Order Summary -->
         <div class="col-md-6">
-            <h2>Order Summary</h2>
+            
 
             @if (orderSummary != null)
             {
-                <div class="card p-3">
+                <div class="card p-3 shadow-lg">
                     <h4 class="text-center">Café de Luxe Receipt</h4>
                     <p>Order Type: <strong>@orderSummary.OrderType</strong></p>
                     <p>Payment Type: <strong>@orderSummary.PaymentType</strong></p>

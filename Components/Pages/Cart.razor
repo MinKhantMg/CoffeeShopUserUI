@@ -11,14 +11,16 @@
 <div class="container mt-5">
 	<div class="row">
 
-		<div class="mb-3">
+		<div class="col-md-3 mb-3">
 			<button class="btn btn-primary" @onclick="BackToMenu">
 				<i class="fas fa-arrow-left"></i> Back to Menu
 			</button>
 		</div>
+		<h1 class="col-md-4 text-center">Cart</h1>
 
 		<div class="col-md-8">
-			<h2>Your Cart</h2>
+			
+			<div style="margin-bottom: 45px"></div>
 
 			@if (cartItems == null || !cartItems.Any())
 			{
@@ -34,7 +36,7 @@
 				@foreach (var item in cartItems)
 				{
 
-					<div class="card mb-3 position-relative">
+					<div class="card mb-3 position-relative shadow">
 						<button class="position-absolute top-0 end-0 m-2 text-white bg-danger border-0"
 								style="width: 32px; height: 32px; font-size: 16px;"
 								title="Remove item"
@@ -84,8 +86,8 @@
 			}
 		</div>
 
-		<div class="col-md-4">
-			<div class="card p-3" style="margin-top: 45px">
+		<div class="col-md-4 ">
+			<div class="card p-3 shadow" style="margin-top: 45px">
 				<h4>Summary</h4>
 				<p>Total Items: @cartItems?.Count</p>
 				<p>Total Price: MMK @cartItems?.Sum(i => i.Price * i.Quantity)</p>
